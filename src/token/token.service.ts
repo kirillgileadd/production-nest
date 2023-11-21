@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Token } from './token.model';
 import { UserDto } from '../users/dto/user.dto';
@@ -41,5 +40,36 @@ export class TokenService {
     });
 
     return tokenData;
+  }
+
+  async findToken(refreshToken: string) {
+    const tokenData = await this.tokenRepository.findOne({
+      where: { refreshToken },
+    });
+
+    return tokenData;
+  }
+
+  validateAccessToken(token: string) {
+    try {
+      const userData = this.jwtService.verify<UserDto>(token, {
+        secret: process.env.TOKEN_SECRET_KEY,
+      });
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token: string) {
+    try {
+      const userData = this.jwtService.verify<UserDto>(token, {
+        secret: process.env.TOKEN_SECRET_KEY,
+      });
+      return userData;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }

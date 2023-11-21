@@ -104,6 +104,26 @@ export class AuthService {
     }
   }
 
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+    const userData = this.tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDataBase = await this.tokenService.findToken(refreshToken);
+
+    if (!userData || !tokenFromDataBase) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.userService.getUsersById(userData.id);
+
+    return await this.setTokens({
+      email: user.email,
+      id: user.id,
+      isActivated: user.isActivated,
+    });
+  }
+
   private async validateUser(userDto: CreateUserDto) {
     const user = await this.userService.getUsersByEmail(userDto.email);
     if (user) {

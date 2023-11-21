@@ -75,4 +75,22 @@ export class AuthController {
     await this.authService.activate(activationLink);
     return res.redirect(process.env.APP_URL);
   }
+
+  @Get('/refresh')
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    try {
+      const { refresh_token } = req.cookies;
+      const userData = await this.authService.refresh(refresh_token);
+      res.cookie('refresh_token', userData.refreshToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
+      return userData;
+    } catch (error) {
+      return HttpStatus.BAD_REQUEST;
+    }
+  }
 }

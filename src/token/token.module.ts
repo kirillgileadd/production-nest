@@ -11,7 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
     SequelizeModule.forFeature([User, Token]),
     JwtModule.registerAsync({
       useFactory: async () => ({
-        secret: process.env.ACCESS_TOKEN_SECRET_KEY,
+        secret: process.env.TOKEN_SECRET_KEY,
         signOptions: {
           expiresIn: '1h',
         },
