@@ -12,11 +12,19 @@ export class TokenService {
   ) {}
 
   generateTokens(userDto: UserDto) {
-    const accessToken = this.jwtService.sign(userDto, { expiresIn: '1h' });
+    try {
+      const payload = {
+        email: userDto.email,
+        id: userDto.id,
+        roles: userDto.roles,
+      };
+      const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
 
-    const refreshToken = this.jwtService.sign(userDto, { expiresIn: '30d' });
-
-    return { accessToken, refreshToken };
+      const refreshToken = this.jwtService.sign(payload, { expiresIn: '30d' });
+      return { accessToken, refreshToken };
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async saveToken(userId: number, refreshToken: string) {
@@ -30,6 +38,8 @@ export class TokenService {
       userId: userId,
       refreshToken,
     });
+
+    console.log(token);
 
     return token;
   }

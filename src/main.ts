@@ -8,6 +8,11 @@ async function start() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Production Backend')

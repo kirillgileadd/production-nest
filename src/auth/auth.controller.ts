@@ -13,6 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { Response, Request } from 'express';
+import { ForgotPassUserDto } from '../users/dto/forgot-pass-user.dto';
+import { ResetPasswordDto } from '../users/dto/reset-password-dto';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -42,7 +44,6 @@ export class AuthController {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    console.log(userData);
     return userData;
   }
 
@@ -92,5 +93,25 @@ export class AuthController {
     } catch (error) {
       return HttpStatus.BAD_REQUEST;
     }
+  }
+
+  @Post('/forgot-password')
+  async forgotPassword(
+    @Body() userDto: ForgotPassUserDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    try {
+      const userData = await this.authService.forgotPassword(userDto.email);
+      return userData;
+    } catch (error) {
+      return HttpStatus.BAD_REQUEST;
+    }
+  }
+
+  @Post('/reset-password')
+  async resetPassword(@Body() userDto: ResetPasswordDto) {
+    const userData = await this.authService.resetPassword(userDto);
+    return userData;
   }
 }

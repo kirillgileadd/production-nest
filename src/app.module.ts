@@ -11,6 +11,7 @@ import { TokenModule } from './token/token.module';
 import { Token } from './token/token.model';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { Sequelize } from 'sequelize-typescript';
 
 @Module({
   controllers: [],
@@ -20,7 +21,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     SequelizeModule.forRoot({
-      models: [User, Role, UserRoles, Token],
+      models: [Role, UserRoles, Token, User],
       dialect: 'postgres',
       autoLoadModels: true,
       host: process.env.POSTRGRES_HOST,
@@ -29,6 +30,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       port: Number(process.env.POSTRGRES_PORT),
       password: process.env.POSTRGRES_PASSWORD,
     }),
+    SequelizeModule.forFeature([Role, UserRoles, Token, User]),
     AuthModule,
     TokenModule,
     UsersModule,
@@ -37,4 +39,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
     MailerModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly sequelize: Sequelize) {
+    // Здесь вы можете вызвать метод sync
+    sequelize.sync({ force: false, alter: true }).then(() => {
+      console.log('Таблицы синхронизированы');
+    });
+  }
+}

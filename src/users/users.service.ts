@@ -40,12 +40,20 @@ export class UsersService {
     return users;
   }
 
-  async getUsersByEmail(email: string) {
+  async getUsersByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { email },
       include: { all: true },
     });
 
+    return user;
+  }
+
+  async getUserByForgotPasswordLink(token: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({
+      where: { forgotPasswordLink: token },
+      include: { all: true },
+    });
     return user;
   }
 

@@ -68,9 +68,14 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: true,
   })
   activationLink: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  forgotPasswordLink: string;
 
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
