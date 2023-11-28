@@ -72,7 +72,6 @@ export class AuthController {
     @Param('activationLink') activationLink,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log({ activationLink });
     await this.authService.activate(activationLink);
     return res.redirect(process.env.APP_URL);
   }
@@ -101,12 +100,8 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    try {
-      const userData = await this.authService.forgotPassword(userDto.email);
-      return userData;
-    } catch (error) {
-      return HttpStatus.BAD_REQUEST;
-    }
+    const userData = await this.authService.forgotPassword(userDto.email);
+    return userData;
   }
 
   @Post('/reset-password')

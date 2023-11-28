@@ -120,7 +120,10 @@ export class AuthService {
       return user;
     }
 
-    return null;
+    throw new HttpException(
+      'Пользователь с таким email не найлден',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async resetPassword(userDto: ResetPasswordDto) {

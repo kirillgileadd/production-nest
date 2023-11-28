@@ -40,10 +40,10 @@ import { Sequelize } from 'sequelize-typescript';
   ],
 })
 export class AppModule {
-  constructor(private readonly sequelize: Sequelize) {
-    // Здесь вы можете вызвать метод sync
-    sequelize.sync({ force: false, alter: true }).then(() => {
-      console.log('Таблицы синхронизированы');
-    });
-  }
+  // constructor(private readonly sequelize: Sequelize) {
+  //   // Здесь вы можете вызвать метод sync
+  //   sequelize.sync({ force: false, alter: true }).then(() => {
+  //     console.log('Таблицы синхронизированы');
+  //   });
+  // }
 }
